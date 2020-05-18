@@ -1,5 +1,5 @@
 all:
-	gcc -Wall -c  utf8.c
+	gcc -Wall main.c utf8.c -o test_utf8
 clean:
-	rm utf8.o
+	rm test_utf8
 

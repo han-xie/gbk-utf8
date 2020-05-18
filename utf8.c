@@ -24,11 +24,7 @@
  *
  */
 
-#ifdef __WIN32__
-#include <windows.h>
-#else
 #include <iconv.h>
-#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -39,55 +35,6 @@
 #include "utf8.h"
 
 
-#ifdef __WIN32__
-void utf8_to_gb(const char* src, char* dst, int len)
-{
-    int ret = 0;
-    WCHAR* strA;
-    int i= MultiByteToWideChar(CP_UTF8, 0, src, -1, NULL, 0);
-    if (i <= 0) {
-        printf("ERROR.");
-        return;
-    }
-    strA = (WCHAR*)malloc(i * 2);
-    MultiByteToWideChar(CP_UTF8, 0, src, -1, strA, i);
-    i = WideCharToMultiByte(CP_ACP, 0, strA, -1, NULL, 0, NULL, NULL);
-    if (len >= i) {
-        ret = WideCharToMultiByte(CP_ACP, 0, strA, -1, dst, i, NULL, NULL);
-        dst[i] = 0;
-    }
-    if (ret <= 0) {
-        free(strA);
-        return;
-    }
-
-    free( strA );
-}
-
-void gb_to_utf8(const char* src, char* dst, int len)
-{
-    int ret = 0;
-    WCHAR* strA;
-    int i= MultiByteToWideChar(CP_ACP, 0, src, -1, NULL, 0);
-    if (i <= 0) {
-        printf("ERROR.");
-        return;
-    }
-    strA = (WCHAR*)malloc(i * 2);
-    MultiByteToWideChar(CP_ACP, 0, src, -1, strA, i);
-    i = WideCharToMultiByte(CP_UTF8, 0, strA, -1, NULL, 0, NULL, NULL);
-    if (len >= i) {
-        ret = WideCharToMultiByte(CP_UTF8, 0, strA, -1, dst, i, NULL, NULL);
-        dst[i] = 0;
-    }
-
-    if (ret <= 0) {
-        free(strA);
-        return;
-    }
-    free(strA);
-}
-#else   //Linux
 // starkwong: In iconv implementations, inlen and outlen should be type of size_t not uint, which is different in length on Mac
 void utf8_to_gb(const char* src, char* dst, int len)
 {
@@ -155,5 +102,4 @@ void gb_to_utf8(const char* src, char* dst, int len)
     }
     free(inbuf_hold);   // Don't pass in inbuf as it may have been modified
 }
-#endif
 
