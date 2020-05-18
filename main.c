@@ -2,7 +2,7 @@
 #include "utf8.h"
 
 int main() {
-  char result[256] = "ÄãºÃya";
+  char result[256] = "ÄãºÃya";  // GBK encoding
   char utf8[256];
   gb_to_utf8(result, utf8, 256);
   printf("%s\n", utf8);
